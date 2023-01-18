@@ -1,0 +1,15 @@
+@import '~bootstrap/scss/bootstrap';
+
+.main-wrapper{
+    height: calc(100vh - 57px);
+}
+
+.sc-nav-link{
+    color: white;
+    font-size: .9rem;
+    text-decoration: none;
+    &:hover{
+        color: white;
+        text-decoration: underline;
+    }
+}
