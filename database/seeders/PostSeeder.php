@@ -21,7 +21,6 @@ class PostSeeder extends Seeder
             $new_post->title = $faker->sentence();
             $new_post->slug = Post::generateSlug($new_post->title);
             $new_post->date = date('Y-m-d');
-            $new_post->image = 'https://i1.wp.com/potafiori.com/wp-content/uploads/2020/04/placeholder.png?ssl=1';
             $new_post->text = $faker->paragraph(5);
             $new_post->save();
         }

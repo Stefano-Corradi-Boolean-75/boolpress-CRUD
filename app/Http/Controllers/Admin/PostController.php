@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin; // <- se spostato a mano aggiungere Admin nel namespace
 
 use App\Http\Controllers\Controller; // <----- a aggiungere se il controller lo abbiamo spostato a mano
-
-use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\PostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use GuzzleHttp\Psr7\Request;
+use Illuminate\Contracts\Cache\Store;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -17,8 +19,23 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
-        return view('admin.posts.index', compact('posts'));
+        if(isset($_GET['search'])){
+            $search = $_GET['search'];
+            $posts = Post::where('title','like',"%$search%")->paginate(10);
+        }else{
+            $posts = Post::orderBy('id','desc')->paginate(10);
+        }
+        $direction = 'desc';
+        return view('admin.posts.index', compact('posts', 'direction'));
+    }
+
+    public function orderby($column, $direction){
+
+        $direction = $direction === 'desc' ? 'asc' : 'desc';
+        $posts = Post::orderby($column, $direction)->paginate(10);
+
+        return view('admin.posts.index', compact('posts', 'direction'));
+
     }
 
     /**
@@ -28,7 +45,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.posts.create');
     }
 
     /**
@@ -37,9 +54,33 @@ class PostController extends Controller
      * @param  \App\Http\Requests\StorePostRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePostRequest $request)
+    public function store(PostRequest $request)
     {
-        //
+        $post_data = $request->all();
+
+        $post_data['slug'] = Post::generateSlug($post_data['title']);
+
+        // se è presente il file immagine lo salvo nel filsystem e nel db
+        if(array_key_exists('image',$post_data)){
+
+            // salvo il nome originale
+            $post_data['image_original_name'] = $request->file('image')->getClientOriginalName();
+            // salvo il file sul filesystem e il path in $post_data['image]
+            $post_data['image'] = Storage::put('uploads', $post_data['image']);
+
+        }
+
+        //dd($post_data);
+
+
+        /*$new_post = new Post();
+        $new_post->fill($post_data);
+        $new_post->save();*/
+
+        // soluzione compatta per il save
+        $new_post = Post::create($post_data);
+
+        return redirect()->route('admin.posts.show',$new_post)->with('message','Post creato correttamente');
     }
 
     /**
@@ -50,7 +91,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('admin.posts.show', compact('post'));
     }
 
     /**
@@ -61,7 +102,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('admin.posts.edit',compact('post'));
     }
 
     /**
@@ -71,9 +112,29 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
-        //
+        $post_data = $request->all();
+        if($post_data['title'] != $post->title){
+            $post_data['slug'] = Post::generateSlug($post_data['title']);
+        }else{
+            $post_data['slug'] = $post->slug;
+        }
+
+
+        if(array_key_exists('image',$post_data)){
+
+            // se invio una nuova immagine devo eliminare la vecchia dal filesystem
+            if($post->image){
+                Storage::disk('public')->delete($post->image);
+            }
+            $post_data['image_original_name'] = $request->file('image')->getClientOriginalName();
+            $post_data['image'] = Storage::put('uploads', $post_data['image']);
+        }
+
+        $post->update($post_data);
+
+        return redirect()->route('admin.posts.show',$post)->with('message','Post aggiornato correttamente');
     }
 
     /**
@@ -84,6 +145,12 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        if($post->image){
+            Storage::disk('public')->delete($post->image);
+        }
+
+        $post->delete();
+
+        return redirect()->route('admin.posts.index')->with('deleted','Post eliminato correttamente');
     }
 }

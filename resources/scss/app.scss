@@ -1,5 +1,10 @@
 @import '~bootstrap/scss/bootstrap';
 
+main{
+    height: calc(100vh - 57px);
+    overflow-y: auto;
+}
+
 .main-wrapper{
     height: calc(100vh - 57px);
 }
@@ -12,4 +17,10 @@
         color: white;
         text-decoration: underline;
     }
+}
+
+
+.ck-editor__editable[role="textbox"] {
+    /* editing area */
+    height: 300px;
 }
