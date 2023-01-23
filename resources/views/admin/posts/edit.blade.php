@@ -25,6 +25,7 @@
     <form class="mb-3" action="{{route('admin.posts.update',$post)}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+
         <div class="mb-3">
             <label for="title" class="form-label">Titolo</label>
             <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{old('title', $post->title)}}" placeholder="Titolo">
@@ -32,6 +33,7 @@
                 <p class="invalid-feedback">{{$message}}</p>
             @enderror
         </div>
+
         <div class="mb-3">
             <label for="date" class="form-label">data</label>
             <input type="date" class="form-control @error('date') is-invalid @enderror"  id="date" name="date"
@@ -40,6 +42,20 @@
                 <p class="invalid-feedback">{{$message}}</p>
             @enderror
         </div>
+
+        <div class="mb-3">
+            <label for="date" class="form-label">cateorie</label>
+            <select class="form-select" name="category_id" aria-label="Default select example">
+                <option value="">Selezionare una categoria</option>
+                @foreach ($categories as $category)
+                    <option
+                    @if($category->id == old('category_id', $post->category?->id )) selected @endif
+                     value="{{$category->id}}">{{$category->name}}</option>
+                @endforeach
+            </select>
+
+        </div>
+
         <div class="mb-3">
             <label for="image" class="form-label">Immagine</label>
             <input
@@ -53,6 +69,7 @@
                 <img id='output-image' width="150" src="{{ asset('storage/' . $post->image) }}" alt="{{$post->image_original_name}}">
             </div>
         </div>
+
           <div class="mb-3">
             <label for="text" class="form-label">Testo</label>
             <textarea  name="text"  id="text" rows="3">{{old('text',$post->text)}}</textarea>
@@ -60,10 +77,15 @@
                 <p class="invalid-feedback">{{$message}}</p>
             @enderror
           </div>
+
           <button type="submit" class="btn btn-success">Invio</button>
     </form>
 
-    @include('admin.partials.form-delete')
+    @include('admin.partials.form-delete',[
+                        'route' => 'posts',
+                        'message' => "Confermi l'eliminazione del post: $post->title",
+                        'entity' => $post
+                    ])
 
 </div>
 

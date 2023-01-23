@@ -26,6 +26,7 @@
 
     <form action="{{route('admin.posts.store')}}" method="POST" enctype="multipart/form-data">
         @csrf
+
         <div class="mb-3">
             <label for="title" class="form-label">Titolo</label>
             <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{old('title')}}" placeholder="Titolo">
@@ -33,6 +34,7 @@
                 <p class="invalid-feedback">{{$message}}</p>
             @enderror
         </div>
+
         <div class="mb-3">
             <label for="date" class="form-label">data</label>
             <input
@@ -43,6 +45,20 @@
             @enderror
 
         </div>
+
+        <div class="mb-3">
+            <label for="date" class="form-label">cateorie</label>
+            <select class="form-select" name="category_id" aria-label="Default select example">
+                <option value="">Selezionare una categoria</option>
+                @foreach ($categories as $category)
+                    <option
+                    @if($category->id == old('category_id')) selected @endif
+                     value="{{$category->id}}">{{$category->name}}</option>
+                @endforeach
+            </select>
+
+        </div>
+
         <div class="mb-3">
             <label for="image" class="form-label">Immagine</label>
             <input
@@ -55,6 +71,7 @@
                 <img id='output-image' width="150" src="" alt="">
             </div>
         </div>
+
           <div class="mb-3">
             <label for="text" class="form-label">Testo</label>
             <textarea name="text"  id="text" rows="10">{{old('text')}}</textarea>
@@ -62,6 +79,7 @@
                 <p class="invalid-feedback">{{$message}}</p>
             @enderror
           </div>
+
           <button type="submit" class="btn btn-success">Invio</button>
     </form>
 

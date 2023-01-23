@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Guest\PageController;
@@ -24,8 +25,10 @@ Route::middleware(['auth','verified'])
     ->prefix('admin')
     ->group(function(){
         Route::get('/',[DashboardController::class, 'index'])->name('home');
+        Route::get('posts/post-category',[PostController::class, 'categories_post'])->name('categories_post');
         Route::resource('posts', PostController::class);
         Route::get('posts/orderby/{column}/{direction}', [PostController::class, 'orderby'])->name('posts.orderby');
+        Route::resource('categories', CategoryController::class)->except(['show','create','edit']);
     });
 
 

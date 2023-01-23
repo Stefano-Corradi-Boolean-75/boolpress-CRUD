@@ -31,13 +31,18 @@
             @forelse ($posts as $post)
             <tr>
                 <td>{{$post->id}}</td>
-                <td>{{$post->title}}</td>
+                <td>{{$post->title}} <span class="badge text-bg-info">{{$post->category?->name}}</span>
+                    </td>
                 <td>{{date_format(date_create($post->date),'d/m/Y')}}</td>
                 <td class="d-flex">
                     <a class="btn btn-primary d-inline-block me-2" href="{{route('admin.posts.show', $post)}}">SHOW</a>
                     <a class="btn btn-warning  d-inline-block me-2 " href="{{route('admin.posts.edit', $post)}}">EDIT</a>
 
-                    @include('admin.partials.form-delete')
+                    @include('admin.partials.form-delete',[
+                        'route' => 'posts',
+                        'message' => "Confermi l'eliminazione del post: $post->title",
+                        'entity' => $post
+                    ])
 
                 </td>
             </tr>

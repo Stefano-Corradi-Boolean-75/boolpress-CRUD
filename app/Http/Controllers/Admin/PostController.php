@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin; // <- se spostato a mano aggiungere Admin 
 use App\Http\Controllers\Controller; // <----- a aggiungere se il controller lo abbiamo spostato a mano
 use App\Http\Requests\PostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Models\Category;
 use App\Models\Post;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Contracts\Cache\Store;
@@ -29,6 +30,12 @@ class PostController extends Controller
         return view('admin.posts.index', compact('posts', 'direction'));
     }
 
+    public function categories_post(){
+
+        $categories = Category::all();
+        return view('admin.posts.list_category_post', compact('categories'));
+    }
+
     public function orderby($column, $direction){
 
         $direction = $direction === 'desc' ? 'asc' : 'desc';
@@ -45,7 +52,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+        return view('admin.posts.create',compact('categories'));
     }
 
     /**
@@ -102,7 +110,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('admin.posts.edit',compact('post'));
+        $categories = Category::all();
+        return view('admin.posts.edit',compact('post','categories'));
     }
 
     /**

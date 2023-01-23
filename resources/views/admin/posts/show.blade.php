@@ -14,10 +14,13 @@
     @endif
 
 
-
-
     <h1 class="my-5"> {{$post->title}} <a class="btn btn-warning " href="{{route('admin.posts.edit', $post)}}">EDIT</a> </h1>
     <p>{{date_format(date_create($post->date),'d/m/Y')}}</p>
+
+    {{-- stampo la categoria solo se c'è --}}
+    @if ($post->category)
+        <h4>Categoria : {{$post->category->name}}</h4>
+    @endif
 
     @if($post->image)
         <div>
