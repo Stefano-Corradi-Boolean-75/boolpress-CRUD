@@ -43,6 +43,7 @@
                 <li class="nav-item">
                     <a class="dropdown-item text-white" href="{{ route('logout') }}" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
+                       {{Auth::user()->name}}
                         {{ __('Logout') }}
                         </a>
 

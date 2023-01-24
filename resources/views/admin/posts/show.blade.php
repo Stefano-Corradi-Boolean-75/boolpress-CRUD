@@ -22,6 +22,16 @@
         <h4>Categoria : {{$post->category->name}}</h4>
     @endif
 
+    {{-- stampo l'elenco dei tag solo se ci sono  --}}
+    @if ($post->tags)
+        <div>
+            @foreach ($post->tags as $tag )
+                <span class="badge text-bg-warning">{{$tag->name}}</span>
+            @endforeach
+        </div>
+    @endif
+
+
     @if($post->image)
         <div>
             <img width="500" src="{{asset('storage/' . $post->image)}}" alt="{{$post->image_original_name}}">

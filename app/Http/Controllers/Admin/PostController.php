@@ -7,8 +7,10 @@ use App\Http\Requests\PostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Contracts\Cache\Store;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -22,9 +24,11 @@ class PostController extends Controller
     {
         if(isset($_GET['search'])){
             $search = $_GET['search'];
-            $posts = Post::where('title','like',"%$search%")->paginate(10);
+            $posts = Post::where('user_id', Auth::id())
+                        ->where('title','like',"%$search%")
+                        ->paginate(10);
         }else{
-            $posts = Post::orderBy('id','desc')->paginate(10);
+            $posts = Post::where('user_id', Auth::id())->orderBy('id','desc')->paginate(10);
         }
         $direction = 'desc';
         return view('admin.posts.index', compact('posts', 'direction'));
@@ -53,7 +57,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.posts.create',compact('categories'));
+        $tags = Tag::all();
+        return view('admin.posts.create',compact('categories','tags'));
     }
 
     /**
@@ -78,6 +83,8 @@ class PostController extends Controller
 
         }
 
+        $post_data['user_id'] = Auth::id();
+
         //dd($post_data);
 
 
@@ -87,6 +94,14 @@ class PostController extends Controller
 
         // soluzione compatta per il save
         $new_post = Post::create($post_data);
+
+        // per aggiungere i tag nella tabella ponte prima devo avere salvato la nuova entità perché l'ID del nuovo post lo ottengo solo dopo averlo salvato
+
+        // verigfico l'esisteza in $post_data dell'array tags
+        if(array_key_exists('tags',$post_data)){
+            // in attach passo l'array dei tag (che poi è un array degli id dei tag in relazione)
+            $new_post->tags()->attach($post_data['tags']);
+        }
 
         return redirect()->route('admin.posts.show',$new_post)->with('message','Post creato correttamente');
     }
@@ -99,7 +114,11 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('admin.posts.show', compact('post'));
+        if($post->user_id === Auth::id()){
+            return view('admin.posts.show', compact('post'));
+        }
+
+        return redirect()->route('admin.posts.index');
     }
 
     /**
@@ -110,8 +129,12 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        if($post->user_id != Auth::id()){
+            return redirect()->route('admin.posts.index');
+        }
         $categories = Category::all();
-        return view('admin.posts.edit',compact('post','categories'));
+        $tags = Tag::all();
+        return view('admin.posts.edit',compact('post','categories','tags'));
     }
 
     /**
@@ -143,6 +166,15 @@ class PostController extends Controller
 
         $post->update($post_data);
 
+        if(array_key_exists('tags', $post_data)){
+            $post->tags()->sync($post_data['tags']);
+        }else{
+          //  $post->tags()->sync([]); // passando un array vuoto a sync si ottine lo stesso risultato di detach
+          $post->tags()->detach(); // elimina tutte le relazioni
+        }
+
+
+
         return redirect()->route('admin.posts.show',$post)->with('message','Post aggiornato correttamente');
     }
 
@@ -154,6 +186,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+
+        // se nella migration non avessi messi casadeOnDelete() a questo punto dovrei fare:
+        // $post->tags->detach(); per eliminare le relazioni "morte"
+
         if($post->image){
             Storage::disk('public')->delete($post->image);
         }

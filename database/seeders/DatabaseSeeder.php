@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             PostSeeder::class,
             CategoryTableSeeder::class,
             PostCategorySeeder::class,
+            TagsTableSeeder::class,
+            PostsTagsTableSeeder::class,
         ]);
     }
 }

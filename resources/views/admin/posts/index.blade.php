@@ -22,6 +22,7 @@
           <tr>
             <th scope="col"> <a href="{{route('admin.posts.orderby',['id',$direction])}}">ID</a> </th>
             <th scope="col"><a href="{{route('admin.posts.orderby',['title',$direction])}}">Titolo</a></th>
+            <th scope="col">Tag</th>
             <th scope="col"><a href="{{route('admin.posts.orderby',['date',$direction])}}">Data</a></th>
             <th scope="col">azioni</th>
           </tr>
@@ -33,6 +34,15 @@
                 <td>{{$post->id}}</td>
                 <td>{{$post->title}} <span class="badge text-bg-info">{{$post->category?->name}}</span>
                     </td>
+                <td>
+                    @forelse ($post->tags as $tag)
+                        <span class="badge text-bg-warning">{{$tag->name}}</span>
+
+                    @empty
+                        - no data -
+                    @endforelse
+
+                </td>
                 <td>{{date_format(date_create($post->date),'d/m/Y')}}</td>
                 <td class="d-flex">
                     <a class="btn btn-primary d-inline-block me-2" href="{{route('admin.posts.show', $post)}}">SHOW</a>

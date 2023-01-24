@@ -60,6 +60,25 @@
         </div>
 
         <div class="mb-3">
+            <p for="date" class="form-label">tag</p>
+            @foreach ($tags as $tag )
+                <input type="checkbox"
+                id="tag{{$loop->iteration}}"
+                name="tags[]"
+                value="{{$tag->id}}"
+                @if (in_array($tag->id, old('tags',[])))
+                    checked
+                @endif
+                >
+                <label class="me-2" for="tag{{$loop->iteration}}">{{$tag->name}}</label>
+            @endforeach
+
+        </div>
+
+
+
+
+        <div class="mb-3">
             <label for="image" class="form-label">Immagine</label>
             <input
             onchange="showImage(event)"

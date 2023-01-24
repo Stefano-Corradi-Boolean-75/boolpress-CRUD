@@ -17,13 +17,23 @@ class Post extends Model
         'text',
         'date',
         'image_original_name',
-        'category_id'
+        'category_id',
+        'user_id'
     ];
 
     // relazione con la teblla catogories
     // "appartego a una categoria"
     public function category(){
         return $this->belongsTo(Category::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    // relazione many to many
+    public function tags(){
+        return $this->belongsToMany(Tag::class);
     }
 
 
