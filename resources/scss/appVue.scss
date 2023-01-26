@@ -1,0 +1,53 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body{
+    background-color: brown;
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.container{
+    width: 90%;
+    max-width: 1200px;
+    margin: 50px auto;
+}
+
+.post-box{
+    margin: 20px 0;
+    border-bottom: 1px solid white;
+    padding-bottom: 10px;
+    h3{
+        margin-bottom: 10px;
+    }
+    .tags{
+        span{
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            background-color: aliceblue;
+            color: brown;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: .8rem;
+        }
+    }
+    .caption{
+        font-size: .9rem;
+        font-style: italic;
+    }
+
+}
+
+.paginator{
+    button{
+        padding: 5px 10px;
+        margin-right: 5px;
+    }
+}
+
+
+
