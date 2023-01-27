@@ -33,6 +33,7 @@ Route::namespace('Api')
     ->prefix('posts')
     ->group(function(){
         Route::get('/',[PostController::class, 'index']);
+        Route::get('/{slug}',[PostController::class, 'show']);
 
     });
 

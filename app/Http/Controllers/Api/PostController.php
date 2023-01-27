@@ -12,4 +12,18 @@ class PostController extends Controller
         $posts = Post::with(['tags','category','user'])->orderBy('id','desc')->paginate(10);
         return response()->json(compact('posts'));
     }
+
+    public function show($slug){
+
+        $post = Post::where('slug',$slug)->with(['tags','category','user'])->first();
+
+        if($post->image){
+            $post->image = url("storage/" . $post->image);
+        }else{
+            $post->image = url("storage/uploads/image-paceholder.jpg");
+        }
+
+        return response()->json($post);
+
+    }
 }
