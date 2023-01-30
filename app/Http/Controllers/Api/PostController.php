@@ -26,4 +26,13 @@ class PostController extends Controller
         return response()->json($post);
 
     }
+
+    public function search(){
+        $tosearch = $_POST['tosearch'];
+
+        $posts = Post::where('title','like',"%$tosearch%")->with(['tags','category','user'])->paginate(10);
+
+        return response()->json(compact('posts'));
+    }
+
 }

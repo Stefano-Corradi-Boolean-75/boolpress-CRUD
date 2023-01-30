@@ -2,44 +2,40 @@
 
 import axios from 'axios';
 import {BASE_URL} from '../data/data'
+import {store} from '../data/store'
 
 import PostItem from '../components/PostItem.vue'
+import FormSearch from '../components/FormSearch.vue'
 
 export default {
     name: 'App',
     components:{
-        PostItem
+        PostItem,
+        FormSearch
     },
     data(){
         return {
             BASE_URL,
-            posts : [],
+            store,
             contentMaxLength: 150,
-            pagination:{
-                current: 1,
-                last:null
-            }
+            active_base_url: BASE_URL + 'posts'
         }
     },
     methods:{
-        getApi(page){
-            this.pagination.current = page;
-            axios.get(this.BASE_URL + 'posts', {
-                params:{
-                    page: this.pagination.current
-                }
-            })
+
+        getApi(url){
+
+            axios.get(url)
                 .then(result => {
-                    this.posts = result.data.posts.data;
-                    this.pagination.current = result.data.posts.current_page
-                    this.pagination.last = result.data.posts.last_page
-                    console.log(this.pagination);
+                    store.posts = result.data.posts.data;
+                    store.links = result.data.posts.links;
+                    console.log(store.links);
                 })
         },
 
     },
     mounted(){
-        this.getApi(1);
+        this.getApi(this.active_base_url);
     }
 }
 </script>
@@ -48,35 +44,18 @@ export default {
 
     <h1>Elenco post</h1>
 
-    <PostItem v-for="post in posts" :key="post.id" :post="post" />
+    <FormSearch />
+
+    <PostItem v-for="post in store.posts" :key="post.id" :post="post" />
 
 
     <div class="paginator">
         <button
-            :disabled="pagination.current === 1"
-            @click="getApi(1)"
-            > |	&lt; </button>
+            v-for="link in store.links" :key="link.label"
+            :disabled="link.active || !link.url"
+            @click="getApi(link.url)"
+             v-html="link.label" ></button>
 
-        <button
-            :disabled="pagination.current === 1"
-            @click="getApi(pagination.current - 1)"
-            > &larr; </button>
-
-        <button
-            v-for="i in pagination.last" :key="i"
-            :disabled="pagination.current === i"
-            @click="getApi(i)"
-            > {{i}} </button>
-
-        <button
-            :disabled="pagination.current === pagination.last"
-            @click="getApi(pagination.current + 1)"
-            > &rarr; </button>
-
-        <button
-            :disabled="pagination.current === pagination.last"
-            @click="getApi(pagination.last)"
-            > >| </button>
     </div>
 
 
