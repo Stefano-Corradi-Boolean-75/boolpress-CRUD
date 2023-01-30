@@ -33,8 +33,10 @@ Route::namespace('Api')
     ->prefix('posts')
     ->group(function(){
         Route::get('/',[PostController::class, 'index']);
+        Route::get('/search',[PostController::class, 'search']);
+        Route::get('/post-category/{id}',[PostController::class, 'getByCategory']);
+        Route::get('/post-tag/{id}',[PostController::class, 'getByTag']);
         Route::get('/{slug}',[PostController::class, 'show']);
-        Route::post('/search',[PostController::class, 'search']);
 
     });
 

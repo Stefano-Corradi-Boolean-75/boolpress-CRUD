@@ -14,15 +14,15 @@ export default {
     },
     methods:{
         getApi(){
-
-            const data = new FormData();
-            data.append('tosearch',this.tosearch);
-
-            axios.post(BASE_URL + 'posts/search', data)
+            axios.get(BASE_URL + 'posts/search', {
+                params:{
+                    tosearch: this.tosearch
+                }
+            })
                 .then(result => {
                     this.tosearch = '';
-                    store.posts = result.data.posts.data;
-                    console.log(result.data);
+                    store.posts = result.data;
+                    store.show_paginate = false;
                 })
 
         }
