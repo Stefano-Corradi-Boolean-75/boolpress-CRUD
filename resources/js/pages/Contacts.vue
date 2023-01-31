@@ -1,22 +1,21 @@
 <script>
+import ContactForm from '../components/ContactForm.vue'
 export default {
-    name: 'Contacts'
+    name: 'Contacts',
+    components:{
+        ContactForm
+    }
 }
 </script>
 
 <template>
-    <h1>contatti</h1>
-    <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatibus beatae esse culpa earum nemo, quos, commodi est at autem nisi dignissimos facere et consequatur laboriosam eum provident ipsa veritatis? Ratione.
-    </p>
-    <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatibus beatae esse culpa earum nemo, quos, commodi est at autem nisi dignissimos facere et consequatur laboriosam eum provident ipsa veritatis? Ratione.
-    </p>
+    <h1>Contatti</h1>
+    <ContactForm />
 
 </template>
 
 
 
-<style>
+<style lang="scss" scoped>
 
 </style>

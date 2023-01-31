@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -50,13 +51,22 @@ class PostController extends Controller
 
     public function getByTag($id){
 
-        $list_posts = [];
+        /*$list_posts = [];
         $tag = Tag::where('id',$id)->with(['posts'])->first();
         foreach($tag->posts as $post){
             $list_posts[] = Post::where('id',$post->id)->with(['tags','category','user'])->first();
-        }
+        }*/
 
-        return response()->json($list_posts);
+
+        $posts = Post::with(['tags','category','user'])
+            ->whereHas('tags', function (Builder $query) use($id){
+                $query->where('tag_id', $id);
+            })
+            ->get();
+
+
+
+        return response()->json($posts);
 
     }
 
