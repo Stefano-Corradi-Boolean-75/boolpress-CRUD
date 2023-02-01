@@ -5,7 +5,9 @@ export default {
 </script>
 
 <template>
-    <h1>Errore 404!</h1>
+    <div class="container-inner">
+        <h1>Errore 404!</h1>
+    </div>
 
 </template>
 

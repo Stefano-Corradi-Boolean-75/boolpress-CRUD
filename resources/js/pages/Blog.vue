@@ -49,7 +49,7 @@ export default {
 
 <template>
 
-    <div class="wrapper">
+    <div class="wrapper container-inner">
         <div class="container-posts">
             <h1>{{store.main_title}}</h1>
 
@@ -71,10 +71,6 @@ export default {
         <AsideCategoryTag @getApi="getApi()" />
 
     </div>
-
-
-
-
 
 </template>
 

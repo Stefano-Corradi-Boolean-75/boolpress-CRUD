@@ -34,17 +34,19 @@ export default {
 </script>
 
 <template>
-      <h1>{{post.title}}</h1>
-      <p>{{formateDate}}</p>
-      <div v-if="post.category">Categoria: {{post.category.name}}</div>
+      <div class="container-inner">
+        <h1>{{post.title}}</h1>
+        <p>{{formateDate}}</p>
+        <div v-if="post.category">Categoria: {{post.category.name}}</div>
 
-     <span v-for="tag in post.tags" :key="tag.id" class="tag">{{tag.name}}</span>
+        <span v-for="tag in post.tags" :key="tag.id" class="tag">{{tag.name}}</span>
 
-     <div>
-        <img :src="post.image" :alt="post.title">
-     </div>
+        <div>
+            <img :src="post.image" :alt="post.title">
+        </div>
 
-     <div v-html="post.text"></div>
+        <div v-html="post.text"></div>
+      </div>
 
 
 </template>
