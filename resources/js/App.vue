@@ -18,8 +18,11 @@ export default {
         <!-- qui vengono caricati tutti i componenti delle pagine del router -->
 
 
-         <router-view v-slot="{ Component }" class="page">
-            <transition name="fade">
+         <router-view v-slot="{ Component, route }" class="page">
+            <transition
+                :enter-active-class="route.meta.enterClass"
+                :leave-active-class="route.meta.leaveClass"
+            >
                 <component :is="Component" />
             </transition>
          </router-view>
@@ -43,14 +46,6 @@ export default {
 }
 
 
-.fade-enter-from,
-.fade-leave-to{
-    opacity: 0;
-}
-
-.fade-enter-active,
-.fade-leave-active{
-    transition: opacity 1s ease-out;
-}
-
 </style>
+
+animate__animated animate__fadeOut

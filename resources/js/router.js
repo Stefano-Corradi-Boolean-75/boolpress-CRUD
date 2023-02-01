@@ -7,6 +7,13 @@ import Error404 from './pages/Error404.vue';
 import Blog from './pages/Blog.vue';
 import PostDetail from './pages/PostDetail.vue';
 
+const meta = {
+    enterClass: 'animate__animated animate__fadeIn',
+    leaveClass: 'animate__animated animate__fadeOut'
+    //enterClass: 'animate__animated animate__bounceInLeft',
+    //leaveClass: 'animate__animated animate__bounceOutRight'
+}
+
 const router = createRouter({
     history: createWebHistory(),
     linkExactActiveClass: 'active',
@@ -14,32 +21,38 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: Home
+            component: Home,
+            meta
         },
         {
             path: '/chi-siamo',
             name: 'about',
-            component: About
+            component: About,
+            meta
         },
         {
             path: '/contatti',
             name: 'contacts',
-            component: Contacts
+            component: Contacts,
+            meta
         },
         {
             path: '/blog',
             name: 'blog',
-            component: Blog
+            component: Blog,
+            meta
         },
         {
             path: '/blog/dettaglio-post/:slug',
             name: 'detail',
-            component: PostDetail
+            component: PostDetail,
+            meta
         },
         {
             // rotta per 404 da mettere in fondo alle altre rotte
             path: '/:pathMatch(.*)*',
-            component: Error404
+            component: Error404,
+            meta
         }
     ]
 
